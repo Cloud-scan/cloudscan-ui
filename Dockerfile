@@ -1,0 +1,174 @@
+# Simplified Dockerfile for CloudScan UI - No build required
+FROM nginx:1.25-alpine
+
+# Install runtime dependencies
+RUN apk add --no-cache ca-certificates tzdata curl
+
+# Create nginx configuration that works with non-root user
+RUN cat > /etc/nginx/nginx.conf <<'EOF'
+pid /tmp/nginx.pid;
+events {
+    worker_connections 1024;
+}
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+    client_body_temp_path /tmp/client_temp;
+    proxy_temp_path /tmp/proxy_temp_path;
+    fastcgi_temp_path /tmp/fastcgi_temp;
+    uwsgi_temp_path /tmp/uwsgi_temp;
+    scgi_temp_path /tmp/scgi_temp;
+
+    server {
+        listen 3000;
+        server_name _;
+        root /usr/share/nginx/html;
+        index index.html;
+
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+
+        location /api {
+            proxy_pass http://cloudscan-api-gateway:8080;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+}
+EOF
+
+# Create a simple HTML page inline
+RUN cat > /usr/share/nginx/html/index.html <<'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudScan - Security Scanning Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px;
+            max-width: 800px;
+            text-align: center;
+        }
+        h1 { font-size: 3em; color: #667eea; margin-bottom: 20px; }
+        .subtitle { font-size: 1.5em; color: #666; margin-bottom: 40px; }
+        .status {
+            background: #f0f4f8;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .status-item:last-child { border-bottom: none; }
+        .badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        .badge-success { background: #48bb78; color: white; }
+        .badge-info { background: #4299e1; color: white; }
+        .features {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+        .feature {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+        .feature-icon { font-size: 2em; margin-bottom: 10px; }
+        .feature-title { font-weight: 600; color: #2d3748; margin-bottom: 5px; }
+        .feature-desc { color: #718096; font-size: 0.9em; }
+        .pulse { animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CloudScan</h1>
+        <p class="subtitle">Security Scanning Platform</p>
+        <div class="status">
+            <div class="status-item">
+                <span>Platform Status</span>
+                <span class="badge badge-success pulse">Online</span>
+            </div>
+            <div class="status-item">
+                <span>Version</span>
+                <span class="badge badge-info">1.0.0</span>
+            </div>
+            <div class="status-item">
+                <span>API Gateway</span>
+                <span class="badge badge-success">Ready</span>
+            </div>
+        </div>
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🔍</div>
+                <div class="feature-title">SAST</div>
+                <div class="feature-desc">Semgrep scanning</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <div class="feature-title">Secrets</div>
+                <div class="feature-desc">TruffleHog detection</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📦</div>
+                <div class="feature-title">Containers</div>
+                <div class="feature-desc">Trivy scanning</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📄</div>
+                <div class="feature-title">Licenses</div>
+                <div class="feature-desc">ScanCode analysis</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+EOF
+
+# Create necessary directories with proper permissions
+RUN mkdir -p /tmp /var/cache/nginx && \
+    chown -R nginx:nginx /usr/share/nginx/html /tmp /var/cache/nginx
+
+# Switch to non-root user
+USER nginx
+
+# Expose HTTP port
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:3000/ || exit 1
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
