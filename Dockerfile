@@ -29,7 +29,43 @@ FROM nginx:1.25-alpine
 # Install runtime dependencies
 RUN apk add --no-cache ca-certificates tzdata curl
 
-# Create default nginx configuration
+# Create custom nginx.conf that doesn't require root
+RUN cat > /etc/nginx/nginx.conf <<'EOF'
+worker_processes auto;
+error_log /tmp/nginx_error.log warn;
+pid /tmp/nginx.pid;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log /tmp/nginx_access.log main;
+
+    sendfile on;
+    tcp_nopush on;
+    keepalive_timeout 65;
+    gzip on;
+
+    # Use /tmp for cache directories (writable by nginx user)
+    client_body_temp_path /tmp/client_temp;
+    proxy_temp_path /tmp/proxy_temp;
+    fastcgi_temp_path /tmp/fastcgi_temp;
+    uwsgi_temp_path /tmp/uwsgi_temp;
+    scgi_temp_path /tmp/scgi_temp;
+
+    include /etc/nginx/conf.d/*.conf;
+}
+EOF
+
+# Create default server configuration
 RUN cat > /etc/nginx/conf.d/default.conf <<'EOF'
 server {
   listen 3000;
@@ -57,23 +93,11 @@ EOF
 # Copy built application from builder
 COPY --from=builder /build/build /usr/share/nginx/html
 
-# Set up proper permissions for nginx to run as non-root
-# Keep these commands running as root
-RUN chown -R nginx:nginx /usr/share/nginx/html && \
-  # Pre-create cache directories that nginx needs with proper ownership
-  mkdir -p /var/cache/nginx/client_temp \
-           /var/cache/nginx/proxy_temp \
-           /var/cache/nginx/fastcgi_temp \
-           /var/cache/nginx/uwsgi_temp \
-           /var/cache/nginx/scgi_temp && \
-  chown -R nginx:nginx /var/cache/nginx && \
-  chmod -R 755 /var/cache/nginx && \
-  # Set permissions for runtime directories
-  chown -R nginx:nginx /var/run && \
-  chmod -R 755 /var/run && \
-  # Create pid file location
-  touch /var/run/nginx.pid && \
-  chown nginx:nginx /var/run/nginx.pid
+# Create necessary directories and set permissions
+RUN chown -R nginx:nginx /usr/share/nginx/html /etc/nginx/conf.d && \
+    mkdir -p /tmp/client_temp /tmp/proxy_temp /tmp/fastcgi_temp /tmp/uwsgi_temp /tmp/scgi_temp && \
+    chown -R nginx:nginx /tmp && \
+    chmod -R 755 /tmp
 
 # Expose HTTP port
 EXPOSE 3000
