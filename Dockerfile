@@ -38,19 +38,19 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=builder /build/build /usr/share/nginx/html
 
 # Create necessary directories and set permissions
-RUN mkdir -p /var/cache/nginx /var/log/nginx /var/run /tmp/nginx && \
-    touch /var/run/nginx.pid && \
-    chown -R cloudscan:cloudscan /usr/share/nginx/html /var/cache/nginx /var/log/nginx /var/run /tmp/nginx
+RUN mkdir -p /var/cache/nginx /tmp/nginx && \
+    chown -R cloudscan:cloudscan /usr/share/nginx/html /var/cache/nginx /tmp/nginx && \
+    chmod -R 755 /var/cache/nginx /tmp/nginx
 
 # Switch to non-root user
 USER cloudscan
 
 # Expose HTTP port
-EXPOSE 80
+EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:80/ || exit 1
+    CMD curl -f http://localhost:8080/health || exit 1
 
 # Run nginx in foreground
 CMD ["nginx", "-g", "daemon off;"]
