@@ -42,7 +42,14 @@ export const Signup: React.FC = () => {
 
   const onSubmit = async (data: SignupFormData) => {
     try {
-      const { confirmPassword, ...signupData } = data;
+      const { confirmPassword, firstName, lastName, organizationName, ...rest } = data;
+      // Transform to snake_case for API
+      const signupData = {
+        ...rest,
+        first_name: firstName,
+        last_name: lastName,
+        organization_name: organizationName,
+      };
       await signup(signupData);
       addNotification({
         type: 'success',
