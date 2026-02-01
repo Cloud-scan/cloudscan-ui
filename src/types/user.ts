@@ -44,9 +44,9 @@ export interface OrganizationMember {
 export interface SignupRequest {
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
-  organizationName: string;
+  first_name: string;
+  last_name: string;
+  organization_name: string;
 }
 
 export interface LoginRequest {
