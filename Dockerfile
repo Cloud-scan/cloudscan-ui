@@ -14,8 +14,8 @@ RUN npm ci
 COPY . .
 
 # Build the application (Vite uses VITE_* prefix for env vars)
-ARG VITE_API_URL=http://localhost:8080/api/v1
-ARG VITE_WS_URL=ws://localhost:9090
+ARG VITE_API_URL=/api/v1
+ARG VITE_WS_URL=/ws
 ENV VITE_API_URL=${VITE_API_URL}
 ENV VITE_WS_URL=${VITE_WS_URL}
 
