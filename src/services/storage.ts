@@ -10,7 +10,6 @@ import {
   DownloadResponse,
   Artifact,
   ArtifactType,
-  ListResponse,
 } from '../types';
 
 export const storageService = {
@@ -90,9 +89,9 @@ export const storageService = {
    * List artifacts for a scan
    */
   async listByScan(scanId: string): Promise<Artifact[]> {
-    const response = await apiClient.get<ListResponse<Artifact>>('/storage/artifacts', {
+    const response = await apiClient.get<{ artifacts: Artifact[] }>('/storage/artifacts', {
       params: { scan_id: scanId },
     });
-    return response.data.data;
+    return response.data.artifacts;
   },
 };

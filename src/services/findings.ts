@@ -9,7 +9,6 @@ import {
   FindingStats,
   Severity,
   ScanType,
-  ListResponse,
 } from '../types';
 
 export const findingService = {
@@ -19,13 +18,13 @@ export const findingService = {
   async getByScan(
     scanId: string,
     params?: {
-      scanType?: ScanType;
+      scan_type?: ScanType;
       severity?: Severity;
-      pageSize?: number;
-      pageToken?: string;
+      page_size?: number;
+      page_token?: string;
     }
-  ): Promise<ListResponse<Finding>> {
-    const response = await apiClient.get<ListResponse<Finding>>(`/scans/${scanId}/findings`, {
+  ): Promise<{ findings: Finding[]; next_page_token?: string; total_count: number }> {
+    const response = await apiClient.get<{ findings: Finding[]; next_page_token?: string; total_count: number }>(`/scans/${scanId}/findings`, {
       params,
     });
     return response.data;
@@ -62,9 +61,9 @@ export const findingService = {
    * Search findings with filters
    */
   async search(scanId: string, filters: FindingFilters): Promise<Finding[]> {
-    const response = await apiClient.get<ListResponse<Finding>>(`/scans/${scanId}/findings`, {
+    const response = await apiClient.get<{ findings: Finding[] }>(`/scans/${scanId}/findings`, {
       params: filters,
     });
-    return response.data.data;
+    return response.data.findings;
   },
 };

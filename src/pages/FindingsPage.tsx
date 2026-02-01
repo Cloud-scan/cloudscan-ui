@@ -19,7 +19,13 @@ export const FindingsPage: React.FC = () => {
   const [filters, setFilters] = useState<FindingFilters>({});
   const [selectedFinding, setSelectedFinding] = useState<Finding | null>(null);
 
-  const { data: findingsResponse, isLoading } = useScanFindings(scanId, filters);
+  // Convert filters to API parameters (remove search field as it's not supported by backend)
+  const apiParams = {
+    scan_type: filters.scan_type,
+    severity: filters.severity,
+  };
+
+  const { data: findingsResponse, isLoading } = useScanFindings(scanId, apiParams);
   const exportFindings = useExportFindings();
 
   const handleExport = async (format: 'json' | 'csv' | 'pdf') => {
@@ -68,7 +74,7 @@ export const FindingsPage: React.FC = () => {
           </div>
         ) : (
           <FindingsTable
-            findings={findingsResponse?.data || []}
+            findings={findingsResponse?.findings || []}
             onFindingClick={setSelectedFinding}
           />
         )}

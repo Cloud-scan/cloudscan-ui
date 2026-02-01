@@ -9,10 +9,10 @@ import { FindingFilters, Severity, ScanType } from '../types';
 export const useScanFindings = (
   scanId: string | undefined,
   params?: {
-    scanType?: ScanType;
+    scan_type?: ScanType;
     severity?: Severity;
-    pageSize?: number;
-    pageToken?: string;
+    page_size?: number;
+    page_token?: string;
   }
 ) => {
   return useQuery({

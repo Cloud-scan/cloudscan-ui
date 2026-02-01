@@ -68,12 +68,12 @@ export const Signup: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 sm:px-6 lg:px-8 py-12">
       <div className="max-w-md w-full">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-block h-12 w-12 bg-blue-600 rounded-lg flex items-center justify-center mb-2">
+        <div className="text-center mb-8 flex flex-col items-center gap-2">
+          <div className="h-12 w-12 bg-blue-600 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-2xl">C</span>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">CloudScan</h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
+          <p className="text-gray-600 dark:text-gray-400">
             Create your account
           </p>
         </div>

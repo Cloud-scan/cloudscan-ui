@@ -9,10 +9,12 @@ import {
   Login,
   Signup,
   Dashboard,
+  Scans,
   Projects,
   ScanNew,
   ScanDetails,
   FindingsPage,
+  AllFindings,
   Settings,
 } from './pages';
 import { useAuthStore } from './stores';
@@ -77,11 +79,11 @@ function App() {
         >
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/projects" element={<Projects />} />
-          <Route path="/scans" element={<Dashboard />} />
+          <Route path="/scans" element={<Scans />} />
           <Route path="/scans/new" element={<ScanNew />} />
           <Route path="/scans/:id" element={<ScanDetails />} />
           <Route path="/scans/:scanId/findings" element={<FindingsPage />} />
-          <Route path="/findings" element={<FindingsPage />} />
+          <Route path="/findings" element={<AllFindings />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
 

@@ -3,7 +3,7 @@
  */
 
 import apiClient from './api';
-import { Project, CreateProjectRequest, UpdateProjectRequest, ProjectStats, ListResponse } from '../types';
+import { Project, CreateProjectRequest, UpdateProjectRequest, ProjectStats } from '../types';
 
 export const projectService = {
   /**
@@ -26,8 +26,8 @@ export const projectService = {
    * List all projects
    */
   async list(): Promise<Project[]> {
-    const response = await apiClient.get<ListResponse<Project>>('/projects');
-    return response.data.data;
+    const response = await apiClient.get<{ projects: Project[] }>('/projects');
+    return response.data.projects;
   },
 
   /**

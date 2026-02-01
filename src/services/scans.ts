@@ -8,7 +8,6 @@ import {
   CreateScanRequest,
   ScanStatus,
   ScanSummary,
-  ListResponse,
 } from '../types';
 
 export const scanService = {
@@ -36,8 +35,8 @@ export const scanService = {
     status?: ScanStatus;
     page_size?: number;
     page_token?: string;
-  }): Promise<ListResponse<Scan>> {
-    const response = await apiClient.get<ListResponse<Scan>>('/scans', { params });
+  }): Promise<{ scans: Scan[]; next_page_token?: string; total_count: number }> {
+    const response = await apiClient.get<{ scans: Scan[]; next_page_token?: string; total_count: number }>('/scans', { params });
     return response.data;
   },
 
@@ -60,19 +59,19 @@ export const scanService = {
    * Get scans for a specific project
    */
   async getByProject(projectId: string, limit = 10): Promise<Scan[]> {
-    const response = await apiClient.get<ListResponse<Scan>>('/scans', {
+    const response = await apiClient.get<{ scans: Scan[] }>('/scans', {
       params: { project_id: projectId, page_size: limit },
     });
-    return response.data.data;
+    return response.data.scans;
   },
 
   /**
    * Get recent scans
    */
   async getRecent(limit = 10): Promise<Scan[]> {
-    const response = await apiClient.get<ListResponse<Scan>>('/scans', {
+    const response = await apiClient.get<{ scans: Scan[] }>('/scans', {
       params: { page_size: limit },
     });
-    return response.data.data;
+    return response.data.scans;
   },
 };

@@ -3,7 +3,7 @@
  */
 
 import apiClient from './api';
-import { Organization, OrganizationMember, ListResponse } from '../types';
+import { Organization, OrganizationMember } from '../types';
 
 export const organizationService = {
   /**
@@ -18,8 +18,8 @@ export const organizationService = {
    * List all organizations for current user
    */
   async list(): Promise<Organization[]> {
-    const response = await apiClient.get<ListResponse<Organization>>('/organizations');
-    return response.data.data;
+    const response = await apiClient.get<{ organizations: Organization[] }>('/organizations');
+    return response.data.organizations;
   },
 
   /**
@@ -37,10 +37,10 @@ export const organizationService = {
    * Get organization members
    */
   async getMembers(id: string): Promise<OrganizationMember[]> {
-    const response = await apiClient.get<ListResponse<OrganizationMember>>(
+    const response = await apiClient.get<{ members: OrganizationMember[] }>(
       `/organizations/${id}/members`
     );
-    return response.data.data;
+    return response.data.members;
   },
 
   /**
