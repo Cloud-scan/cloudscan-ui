@@ -32,10 +32,10 @@ export const scanService = {
    * List scans with optional filters
    */
   async list(params?: {
-    projectId?: string;
+    project_id?: string;
     status?: ScanStatus;
-    pageSize?: number;
-    pageToken?: string;
+    page_size?: number;
+    page_token?: string;
   }): Promise<ListResponse<Scan>> {
     const response = await apiClient.get<ListResponse<Scan>>('/scans', { params });
     return response.data;
@@ -61,7 +61,7 @@ export const scanService = {
    */
   async getByProject(projectId: string, limit = 10): Promise<Scan[]> {
     const response = await apiClient.get<ListResponse<Scan>>('/scans', {
-      params: { projectId, pageSize: limit },
+      params: { project_id: projectId, page_size: limit },
     });
     return response.data.data;
   },
@@ -71,7 +71,7 @@ export const scanService = {
    */
   async getRecent(limit = 10): Promise<Scan[]> {
     const response = await apiClient.get<ListResponse<Scan>>('/scans', {
-      params: { pageSize: limit },
+      params: { page_size: limit },
     });
     return response.data.data;
   },

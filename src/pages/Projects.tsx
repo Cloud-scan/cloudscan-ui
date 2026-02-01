@@ -40,7 +40,14 @@ export const Projects: React.FC = () => {
 
   const onSubmit = async (data: ProjectFormData) => {
     try {
-      await createProject(data);
+      // Transform to snake_case for API
+      const projectData = {
+        name: data.name,
+        description: data.description,
+        repository_url: data.gitUrl,
+        default_branch: data.gitBranch,
+      };
+      await createProject(projectData);
       addNotification({
         type: 'success',
         message: 'Project created successfully',
@@ -107,7 +114,7 @@ export const Projects: React.FC = () => {
                       {project.name}
                     </h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {project.scanCount} scans
+                      {project.scan_count} scans
                     </p>
                   </div>
                 </div>
@@ -119,9 +126,9 @@ export const Projects: React.FC = () => {
                 </p>
               )}
 
-              {project.lastScanAt && (
+              {project.last_scan_at && (
                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
-                  Last scan: {formatDistanceToNow(new Date(project.lastScanAt), { addSuffix: true })}
+                  Last scan: {formatDistanceToNow(new Date(project.last_scan_at), { addSuffix: true })}
                 </p>
               )}
 

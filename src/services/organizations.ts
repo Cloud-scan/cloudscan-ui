@@ -27,7 +27,7 @@ export const organizationService = {
    */
   async update(
     id: string,
-    data: Partial<Omit<Organization, 'id' | 'createdAt' | 'updatedAt'>>
+    data: Partial<Omit<Organization, 'id' | 'created_at' | 'updated_at'>>
   ): Promise<Organization> {
     const response = await apiClient.put<Organization>(`/organizations/${id}`, data);
     return response.data;

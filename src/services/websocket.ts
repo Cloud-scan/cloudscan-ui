@@ -10,7 +10,7 @@ export type WebSocketMessageType = 'log' | 'progress' | 'status';
 
 export interface WebSocketMessage {
   type: WebSocketMessageType;
-  scanId: string;
+  scan_id: string;
   data: ScanLog | ScanProgress | { status: ScanStatus };
   timestamp: string;
 }
@@ -130,7 +130,7 @@ export class WebSocketClient {
    * Notify all listeners for a scan
    */
   private notifyListeners(message: WebSocketMessage): void {
-    const listeners = this.listeners.get(message.scanId);
+    const listeners = this.listeners.get(message.scan_id);
     if (listeners) {
       listeners.forEach((callback) => callback(message));
     }

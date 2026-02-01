@@ -70,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
               <Menu.Button className="flex items-center gap-2 p-2 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
                 <UserCircleIcon className="h-6 w-6" />
                 <span className="hidden sm:block text-sm font-medium">
-                  {user.firstName} {user.lastName}
+                  {user.first_name} {user.last_name}
                 </span>
               </Menu.Button>
 
@@ -86,7 +86,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                 <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right bg-white dark:bg-gray-800 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none divide-y divide-gray-100 dark:divide-gray-700">
                   <div className="px-4 py-3">
                     <p className="text-sm text-gray-900 dark:text-white">
-                      {user.firstName} {user.lastName}
+                      {user.first_name} {user.last_name}
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
                       {user.email}

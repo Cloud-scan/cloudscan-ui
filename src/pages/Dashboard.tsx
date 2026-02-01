@@ -45,7 +45,7 @@ export const Dashboard: React.FC = () => {
               <div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">Total Scans</p>
                 <p className="text-3xl font-bold text-gray-900 dark:text-white mt-1">
-                  {summary.totalScans}
+                  {summary.total_scans}
                 </p>
               </div>
               <ShieldCheckIcon className="h-12 w-12 text-blue-500" />
@@ -56,7 +56,7 @@ export const Dashboard: React.FC = () => {
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Active Scans</p>
               <p className="text-3xl font-bold text-yellow-600 dark:text-yellow-400 mt-1">
-                {summary.activeScans}
+                {summary.active_scans}
               </p>
             </div>
           </Card>
@@ -65,7 +65,7 @@ export const Dashboard: React.FC = () => {
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Completed Today</p>
               <p className="text-3xl font-bold text-green-600 dark:text-green-400 mt-1">
-                {summary.completedToday}
+                {summary.completed_today}
               </p>
             </div>
           </Card>
@@ -74,7 +74,7 @@ export const Dashboard: React.FC = () => {
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Avg Duration</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white mt-1">
-                {Math.round(summary.averageDuration / 60)}m
+                {Math.round(summary.average_duration / 60)}m
               </p>
             </div>
           </Card>

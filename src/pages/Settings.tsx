@@ -45,8 +45,8 @@ export const Settings: React.FC = () => {
     resolver: zodResolver(profileSchema),
     values: user
       ? {
-          firstName: user.firstName,
-          lastName: user.lastName,
+          firstName: user.first_name,
+          lastName: user.last_name,
           email: user.email,
         }
       : undefined,
@@ -63,7 +63,13 @@ export const Settings: React.FC = () => {
 
   const onSubmitProfile = async (data: ProfileFormData) => {
     try {
-      await updateProfile(data);
+      // Transform to snake_case for API
+      const profileData = {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+      };
+      await updateProfile(profileData);
       addNotification({
         type: 'success',
         message: 'Profile updated successfully',
@@ -78,7 +84,12 @@ export const Settings: React.FC = () => {
 
   const onSubmitPassword = async (data: PasswordFormData) => {
     try {
-      const { confirmPassword, ...passwordData } = data;
+      const { confirmPassword, ...rest } = data;
+      // Transform to snake_case for API
+      const passwordData = {
+        current_password: rest.currentPassword,
+        new_password: rest.newPassword,
+      };
       await changePassword(passwordData);
       addNotification({
         type: 'success',
@@ -196,7 +207,7 @@ export const Settings: React.FC = () => {
       </Card>
 
       {/* Organization Info (Read-only) */}
-      {user.organizationId && (
+      {user.organization_id && (
         <Card title="Organization" subtitle="Your organization details" padding="md">
           <dl className="space-y-3">
             <div>
@@ -208,12 +219,12 @@ export const Settings: React.FC = () => {
               <dd className="mt-1">
                 <span
                   className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                    user.isActive
+                    user.is_active
                       ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                       : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400'
                   }`}
                 >
-                  {user.isActive ? 'Active' : 'Inactive'}
+                  {user.is_active ? 'Active' : 'Inactive'}
                 </span>
               </dd>
             </div>

@@ -67,9 +67,9 @@ export const LogViewer: React.FC<LogViewerProps> = ({ scanId, maxHeight = '400px
               <span className={`font-medium flex-shrink-0 ${logLevelColors[log.level]}`}>
                 [{log.level.toUpperCase()}]
               </span>
-              {log.scanType && (
+              {log.scan_type && (
                 <span className="text-blue-600 dark:text-blue-400 flex-shrink-0">
-                  [{log.scanType}]
+                  [{log.scan_type}]
                 </span>
               )}
               <span className="text-gray-900 dark:text-gray-100">{log.message}</span>

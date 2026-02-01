@@ -5,14 +5,14 @@
 export interface User {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   role: UserRole;
-  organizationId: string;
-  isActive: boolean;
-  lastLoginAt?: string;
-  createdAt: string;
-  updatedAt: string;
+  organization_id: string;
+  is_active: boolean;
+  last_login_at?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export type UserRole = 'user' | 'admin' | 'superadmin';
@@ -20,25 +20,25 @@ export type UserRole = 'user' | 'admin' | 'superadmin';
 export interface Organization {
   id: string;
   name: string;
-  displayName: string;
+  display_name: string;
   description?: string;
   plan: SubscriptionPlan;
-  isActive: boolean;
-  maxProjects: number;
-  maxUsers: number;
-  createdAt: string;
-  updatedAt: string;
+  is_active: boolean;
+  max_projects: number;
+  max_users: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export type SubscriptionPlan = 'free' | 'pro' | 'enterprise';
 
 export interface OrganizationMember {
-  userId: string;
+  user_id: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   role: UserRole;
-  joinedAt: string;
+  joined_at: string;
 }
 
 export interface SignupRequest {
@@ -56,13 +56,13 @@ export interface LoginRequest {
 
 export interface AuthResponse {
   user: User;
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: number;
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
 }
 
 export interface RefreshTokenRequest {
-  refreshToken: string;
+  refresh_token: string;
 }
 
 export interface PasswordResetRequest {
@@ -70,12 +70,12 @@ export interface PasswordResetRequest {
 }
 
 export interface PasswordChangeRequest {
-  currentPassword: string;
-  newPassword: string;
+  current_password: string;
+  new_password: string;
 }
 
 export interface UpdateUserRequest {
-  firstName?: string;
-  lastName?: string;
+  first_name?: string;
+  last_name?: string;
   email?: string;
 }

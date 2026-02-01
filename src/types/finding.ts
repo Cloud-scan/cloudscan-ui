@@ -6,18 +6,18 @@ import { ScanType } from './scan';
 
 export interface Finding {
   id: string;
-  scanId: string;
-  scanType: ScanType;
+  scan_id: string;
+  scan_type: ScanType;
   severity: Severity;
   title: string;
   description: string;
-  filePath?: string;
-  lineNumber?: number;
-  codeSnippet?: string;
-  cveId?: string;
-  cweId?: string;
+  file_path?: string;
+  line_number?: number;
+  code_snippet?: string;
+  cve_id?: string;
+  cwe_id?: string;
   references?: string[];
-  createdAt: string;
+  created_at: string;
 }
 
 export enum Severity {
@@ -29,15 +29,15 @@ export enum Severity {
 }
 
 export interface FindingFilters {
-  scanType?: ScanType;
+  scan_type?: ScanType;
   severity?: Severity;
   search?: string;
 }
 
 export interface FindingStats {
   total: number;
-  bySeverity: Record<Severity, number>;
-  byScanType: Record<ScanType, number>;
+  by_severity: Record<Severity, number>;
+  by_scan_type: Record<ScanType, number>;
 }
 
 export interface FindingExport {

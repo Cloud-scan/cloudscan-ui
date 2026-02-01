@@ -20,8 +20,8 @@ export const authService = {
   async signup(data: SignupRequest): Promise<AuthResponse> {
     const response = await apiClient.post<AuthResponse>('/auth/signup', data);
     // Store tokens
-    localStorage.setItem('accessToken', response.data.accessToken);
-    localStorage.setItem('refreshToken', response.data.refreshToken);
+    localStorage.setItem('accessToken', response.data.access_token);
+    localStorage.setItem('refreshToken', response.data.refresh_token);
     return response.data;
   },
 
@@ -31,8 +31,8 @@ export const authService = {
   async login(data: LoginRequest): Promise<AuthResponse> {
     const response = await apiClient.post<AuthResponse>('/auth/login', data);
     // Store tokens
-    localStorage.setItem('accessToken', response.data.accessToken);
-    localStorage.setItem('refreshToken', response.data.refreshToken);
+    localStorage.setItem('accessToken', response.data.access_token);
+    localStorage.setItem('refreshToken', response.data.refresh_token);
     return response.data;
   },
 
@@ -54,9 +54,9 @@ export const authService = {
    */
   async refreshToken(data: RefreshTokenRequest): Promise<AuthResponse> {
     const response = await apiClient.post<AuthResponse>('/auth/refresh', data);
-    localStorage.setItem('accessToken', response.data.accessToken);
-    if (response.data.refreshToken) {
-      localStorage.setItem('refreshToken', response.data.refreshToken);
+    localStorage.setItem('accessToken', response.data.access_token);
+    if (response.data.refresh_token) {
+      localStorage.setItem('refreshToken', response.data.refresh_token);
     }
     return response.data;
   },

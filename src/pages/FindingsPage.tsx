@@ -40,7 +40,7 @@ export const FindingsPage: React.FC = () => {
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Findings</h1>
             <p className="mt-1 text-gray-500 dark:text-gray-400">
-              {findingsResponse?.totalCount || 0} total findings
+              {findingsResponse?.total_count || 0} total findings
             </p>
           </div>
         </div>

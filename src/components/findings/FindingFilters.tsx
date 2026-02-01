@@ -42,9 +42,9 @@ export const FindingFiltersComponent: React.FC<FindingFiltersProps> = ({ filters
       <Select
         label="Scan Type"
         options={scanTypeOptions}
-        value={filters.scanType || ''}
+        value={filters.scan_type || ''}
         onChange={(e) =>
-          onChange({ ...filters, scanType: (e.target.value as ScanType) || undefined })
+          onChange({ ...filters, scan_type: (e.target.value as ScanType) || undefined })
         }
       />
       <div>

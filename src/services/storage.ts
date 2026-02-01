@@ -45,20 +45,20 @@ export const storageService = {
   ): Promise<string> {
     // Get presigned URL
     const uploadData: UploadArtifactRequest = {
-      scanId,
+      scan_id: scanId,
       type,
       filename: file.name,
-      contentType: file.type,
-      sizeBytes: file.size,
-      expiresInHours,
+      content_type: file.type,
+      size_bytes: file.size,
+      expires_in_hours: expiresInHours,
     };
 
-    const { artifactId, uploadUrl, uploadHeaders } = await this.getUploadUrl(uploadData);
+    const { artifact_id, upload_url, upload_headers } = await this.getUploadUrl(uploadData);
 
     // Upload file
-    await this.uploadFile(file, uploadUrl, uploadHeaders);
+    await this.uploadFile(file, upload_url, upload_headers);
 
-    return artifactId;
+    return artifact_id;
   },
 
   /**
@@ -66,7 +66,7 @@ export const storageService = {
    */
   async getDownloadUrl(artifactId: string, expiresInHours = 1): Promise<DownloadResponse> {
     const response = await apiClient.get<DownloadResponse>(`/storage/download/${artifactId}`, {
-      params: { expiresInHours },
+      params: { expires_in_hours: expiresInHours },
     });
     return response.data;
   },
@@ -75,8 +75,8 @@ export const storageService = {
    * Download file
    */
   async download(artifactId: string): Promise<void> {
-    const { downloadUrl } = await this.getDownloadUrl(artifactId);
-    window.open(downloadUrl, '_blank');
+    const { download_url } = await this.getDownloadUrl(artifactId);
+    window.open(download_url, '_blank');
   },
 
   /**
@@ -91,7 +91,7 @@ export const storageService = {
    */
   async listByScan(scanId: string): Promise<Artifact[]> {
     const response = await apiClient.get<ListResponse<Artifact>>('/storage/artifacts', {
-      params: { scanId },
+      params: { scan_id: scanId },
     });
     return response.data.data;
   },

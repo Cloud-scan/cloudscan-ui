@@ -57,7 +57,15 @@ export const ScanNew: React.FC = () => {
 
   const onSubmit = async (data: ScanFormData) => {
     try {
-      const scan = await createScan(data);
+      // Transform to snake_case for API
+      const scanData = {
+        project_id: data.projectId,
+        scan_types: data.scanTypes,
+        git_url: data.gitUrl,
+        git_branch: data.gitBranch,
+        git_commit: data.gitCommit,
+      };
+      const scan = await createScan(scanData);
       addNotification({
         type: 'success',
         message: 'Scan created successfully',
@@ -109,9 +117,9 @@ export const ScanNew: React.FC = () => {
                   {selectedProject.description}
                 </p>
               )}
-              {selectedProject.gitUrl && (
+              {selectedProject.repository_url && (
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  <strong>Repository:</strong> {selectedProject.gitUrl}
+                  <strong>Repository:</strong> {selectedProject.repository_url}
                 </p>
               )}
             </div>
@@ -130,7 +138,7 @@ export const ScanNew: React.FC = () => {
               {...register('gitUrl')}
               error={errors.gitUrl?.message}
               fullWidth
-              placeholder={selectedProject?.gitUrl || 'https://github.com/user/repo'}
+              placeholder={selectedProject?.repository_url || 'https://github.com/user/repo'}
               helperText="Optional: Override project repository URL"
             />
 
@@ -140,7 +148,7 @@ export const ScanNew: React.FC = () => {
                 {...register('gitBranch')}
                 error={errors.gitBranch?.message}
                 fullWidth
-                placeholder={selectedProject?.gitBranch || 'main'}
+                placeholder={selectedProject?.default_branch || 'main'}
               />
 
               <Input

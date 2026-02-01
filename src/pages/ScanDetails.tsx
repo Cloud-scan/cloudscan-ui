@@ -61,7 +61,7 @@ export const ScanDetails: React.FC = () => {
               Scan #{scan.id.slice(0, 8)}
             </h1>
             <p className="mt-1 text-gray-500 dark:text-gray-400">
-              Created {formatDistanceToNow(new Date(scan.createdAt), { addSuffix: true })}
+              Created {formatDistanceToNow(new Date(scan.created_at), { addSuffix: true })}
             </p>
           </div>
         </div>
@@ -101,7 +101,7 @@ export const ScanDetails: React.FC = () => {
             <div>
               <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Scan Types</dt>
               <dd className="mt-1 flex flex-wrap gap-2">
-                {scan.scanTypes.map((type) => (
+                {scan.scan_types.map((type) => (
                   <span
                     key={type}
                     className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
@@ -115,44 +115,44 @@ export const ScanDetails: React.FC = () => {
             <div>
               <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Created</dt>
               <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                {new Date(scan.createdAt).toLocaleString()}
+                {new Date(scan.created_at).toLocaleString()}
               </dd>
             </div>
 
-            {scan.completedAt && (
+            {scan.completed_at && (
               <div>
                 <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Completed</dt>
                 <dd className="mt-1 text-sm text-gray-900 dark:text-white">
-                  {new Date(scan.completedAt).toLocaleString()}
+                  {new Date(scan.completed_at).toLocaleString()}
                 </dd>
               </div>
             )}
 
-            {scan.gitUrl && (
+            {scan.git_url && (
               <>
                 <div className="col-span-2">
                   <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
                     Repository
                   </dt>
                   <dd className="mt-1 text-sm text-gray-900 dark:text-white font-mono break-all">
-                    {scan.gitUrl}
+                    {scan.git_url}
                   </dd>
                 </div>
 
-                {scan.gitBranch && (
+                {scan.git_branch && (
                   <div>
                     <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Branch</dt>
                     <dd className="mt-1 text-sm text-gray-900 dark:text-white font-mono">
-                      {scan.gitBranch}
+                      {scan.git_branch}
                     </dd>
                   </div>
                 )}
 
-                {scan.gitCommit && (
+                {scan.git_commit && (
                   <div>
                     <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Commit</dt>
                     <dd className="mt-1 text-sm text-gray-900 dark:text-white font-mono">
-                      {scan.gitCommit.slice(0, 7)}
+                      {scan.git_commit.slice(0, 7)}
                     </dd>
                   </div>
                 )}
@@ -168,45 +168,45 @@ export const ScanDetails: React.FC = () => {
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm text-gray-500 dark:text-gray-400">Total</span>
                 <span className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {scan.totalFindings}
+                  {scan.total_findings}
                 </span>
               </div>
             </div>
 
-            {scan.totalFindings > 0 && (
+            {scan.total_findings > 0 && (
               <>
-                {scan.findingsBySeverity.critical > 0 && (
+                {scan.findings_by_severity.critical > 0 && (
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Critical</span>
                     <span className="text-lg font-semibold text-purple-600 dark:text-purple-400">
-                      {scan.findingsBySeverity.critical}
+                      {scan.findings_by_severity.critical}
                     </span>
                   </div>
                 )}
 
-                {scan.findingsBySeverity.high > 0 && (
+                {scan.findings_by_severity.high > 0 && (
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600 dark:text-gray-400">High</span>
                     <span className="text-lg font-semibold text-red-600 dark:text-red-400">
-                      {scan.findingsBySeverity.high}
+                      {scan.findings_by_severity.high}
                     </span>
                   </div>
                 )}
 
-                {scan.findingsBySeverity.medium > 0 && (
+                {scan.findings_by_severity.medium > 0 && (
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Medium</span>
                     <span className="text-lg font-semibold text-orange-600 dark:text-orange-400">
-                      {scan.findingsBySeverity.medium}
+                      {scan.findings_by_severity.medium}
                     </span>
                   </div>
                 )}
 
-                {scan.findingsBySeverity.low > 0 && (
+                {scan.findings_by_severity.low > 0 && (
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Low</span>
                     <span className="text-lg font-semibold text-yellow-600 dark:text-yellow-400">
-                      {scan.findingsBySeverity.low}
+                      {scan.findings_by_severity.low}
                     </span>
                   </div>
                 )}
@@ -223,13 +223,13 @@ export const ScanDetails: React.FC = () => {
       </div>
 
       {/* Error Message */}
-      {scan.errorMessage && (
+      {scan.error_message && (
         <Card padding="md">
           <div className="flex gap-3">
             <XCircleIcon className="h-6 w-6 text-red-500 flex-shrink-0" />
             <div>
               <h3 className="text-sm font-medium text-red-800 dark:text-red-400">Scan Error</h3>
-              <p className="mt-1 text-sm text-red-700 dark:text-red-300">{scan.errorMessage}</p>
+              <p className="mt-1 text-sm text-red-700 dark:text-red-300">{scan.error_message}</p>
             </div>
           </div>
         </Card>

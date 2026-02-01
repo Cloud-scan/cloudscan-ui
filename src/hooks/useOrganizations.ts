@@ -41,7 +41,7 @@ export const useUpdateOrganization = () => {
       data,
     }: {
       id: string;
-      data: Partial<Omit<Organization, 'id' | 'createdAt' | 'updatedAt'>>;
+      data: Partial<Omit<Organization, 'id' | 'created_at' | 'updated_at'>>;
     }) => organizationService.update(id, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['organizations'] });

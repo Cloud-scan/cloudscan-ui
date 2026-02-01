@@ -33,7 +33,7 @@ export const FindingDetailModal: React.FC<FindingDetailModalProps> = ({
             <div className="flex items-center gap-3">
               <SeverityIcon severity={finding.severity} showLabel />
               <span className="text-sm text-gray-600 dark:text-gray-400">
-                <ScanTypeLabel type={finding.scanType} />
+                <ScanTypeLabel type={finding.scan_type} />
               </span>
             </div>
           </div>
@@ -48,60 +48,60 @@ export const FindingDetailModal: React.FC<FindingDetailModalProps> = ({
         </div>
 
         {/* Location */}
-        {finding.filePath && (
+        {finding.file_path && (
           <div>
             <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location</h3>
             <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
               <p className="text-sm font-mono text-gray-900 dark:text-white">
-                {finding.filePath}
-                {finding.lineNumber && ` : line ${finding.lineNumber}`}
+                {finding.file_path}
+                {finding.line_number && ` : line ${finding.line_number}`}
               </p>
             </div>
           </div>
         )}
 
         {/* Code Snippet */}
-        {finding.codeSnippet && (
+        {finding.code_snippet && (
           <div>
             <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Code Snippet
             </h3>
             <pre className="bg-gray-900 dark:bg-black rounded-lg p-4 overflow-x-auto">
-              <code className="text-sm text-green-400 font-mono">{finding.codeSnippet}</code>
+              <code className="text-sm text-green-400 font-mono">{finding.code_snippet}</code>
             </pre>
           </div>
         )}
 
         {/* CVE/CWE IDs */}
-        {(finding.cveId || finding.cweId) && (
+        {(finding.cve_id || finding.cwe_id) && (
           <div className="grid grid-cols-2 gap-4">
-            {finding.cveId && (
+            {finding.cve_id && (
               <div>
                 <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   CVE ID
                 </h3>
                 <a
-                  href={`https://nvd.nist.gov/vuln/detail/${finding.cveId}`}
+                  href={`https://nvd.nist.gov/vuln/detail/${finding.cve_id}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-blue-600 dark:text-blue-400 hover:underline font-mono"
                 >
-                  {finding.cveId}
+                  {finding.cve_id}
                 </a>
               </div>
             )}
-            {finding.cweId && (
+            {finding.cwe_id && (
               <div>
                 <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   CWE ID
                 </h3>
                 <a
-                  href={`https://cwe.mitre.org/data/definitions/${finding.cweId.replace('CWE-', '')}.html`}
+                  href={`https://cwe.mitre.org/data/definitions/${finding.cwe_id.replace('CWE-', '')}.html`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-blue-600 dark:text-blue-400 hover:underline font-mono"
                 >
-                  {finding.cweId}
+                  {finding.cwe_id}
                 </a>
               </div>
             )}

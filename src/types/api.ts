@@ -17,33 +17,33 @@ export interface PaginatedResponse<T> {
   items: T[];
   total: number;
   page: number;
-  pageSize: number;
-  hasNext: boolean;
-  hasPrevious: boolean;
+  page_size: number;
+  has_next: boolean;
+  has_previous: boolean;
 }
 
 export interface PaginationParams {
   page?: number;
-  pageSize?: number;
-  sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  page_size?: number;
+  sort_by?: string;
+  sort_order?: 'asc' | 'desc';
 }
 
 export interface ListResponse<T> {
   data: T[];
-  nextPageToken?: string;
-  totalCount: number;
+  next_page_token?: string;
+  total_count: number;
 }
 
 export interface UploadResponse {
-  artifactId: string;
-  uploadUrl: string;
-  uploadHeaders?: Record<string, string>;
+  artifact_id: string;
+  upload_url: string;
+  upload_headers?: Record<string, string>;
 }
 
 export interface DownloadResponse {
-  downloadUrl: string;
-  expiresAt: string;
+  download_url: string;
+  expires_at: string;
 }
 
 export interface HealthCheck {

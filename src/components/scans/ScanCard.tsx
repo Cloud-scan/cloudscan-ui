@@ -15,7 +15,7 @@ export interface ScanCardProps {
 }
 
 export const ScanCard: React.FC<ScanCardProps> = ({ scan }) => {
-  const createdAt = new Date(scan.createdAt);
+  const createdAt = new Date(scan.created_at);
 
   return (
     <Link to={`/scans/${scan.id}`}>
@@ -36,7 +36,7 @@ export const ScanCard: React.FC<ScanCardProps> = ({ scan }) => {
 
         {/* Scan types */}
         <div className="flex items-center gap-2 mb-4">
-          {scan.scanTypes.map((type) => (
+          {scan.scan_types.map((type) => (
             <div
               key={type}
               className="flex items-center gap-1 px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded"
@@ -50,33 +50,33 @@ export const ScanCard: React.FC<ScanCardProps> = ({ scan }) => {
         </div>
 
         {/* Findings summary */}
-        {scan.totalFindings > 0 && (
+        {scan.total_findings > 0 && (
           <div className="flex items-center gap-4 text-sm">
             <div className="flex items-center gap-1">
               <span className="font-medium text-gray-700 dark:text-gray-300">Findings:</span>
               <span className="text-gray-900 dark:text-white font-semibold">
-                {scan.totalFindings}
+                {scan.total_findings}
               </span>
             </div>
-            {scan.findingsBySeverity.critical > 0 && (
+            {scan.findings_by_severity.critical > 0 && (
               <span className="text-red-600 dark:text-red-400 font-medium">
-                {scan.findingsBySeverity.critical} Critical
+                {scan.findings_by_severity.critical} Critical
               </span>
             )}
-            {scan.findingsBySeverity.high > 0 && (
+            {scan.findings_by_severity.high > 0 && (
               <span className="text-orange-600 dark:text-orange-400 font-medium">
-                {scan.findingsBySeverity.high} High
+                {scan.findings_by_severity.high} High
               </span>
             )}
           </div>
         )}
 
         {/* Git info */}
-        {scan.gitUrl && (
+        {scan.git_url && (
           <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
             <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-              {scan.gitBranch && <span className="font-medium">{scan.gitBranch}</span>}
-              {scan.gitCommit && <span className="ml-2">#{scan.gitCommit.slice(0, 7)}</span>}
+              {scan.git_branch && <span className="font-medium">{scan.git_branch}</span>}
+              {scan.git_commit && <span className="ml-2">#{scan.git_commit.slice(0, 7)}</span>}
             </p>
           </div>
         )}

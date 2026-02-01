@@ -4,15 +4,15 @@
 
 export interface Artifact {
   id: string;
-  scanId: string;
-  organizationId: string;
+  scan_id: string;
+  organization_id: string;
   type: ArtifactType;
   filename: string;
-  sizeBytes: number;
-  contentType?: string;
-  storagePath: string;
-  createdAt: string;
-  expiresAt?: string;
+  size_bytes: number;
+  content_type?: string;
+  storage_path: string;
+  created_at: string;
+  expires_at?: string;
 }
 
 export enum ArtifactType {
@@ -23,10 +23,10 @@ export enum ArtifactType {
 }
 
 export interface UploadArtifactRequest {
-  scanId: string;
+  scan_id: string;
   type: ArtifactType;
   filename: string;
-  contentType: string;
-  sizeBytes: number;
-  expiresInHours?: number;
+  content_type: string;
+  size_bytes: number;
+  expires_in_hours?: number;
 }

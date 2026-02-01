@@ -4,19 +4,19 @@
 
 export interface Scan {
   id: string;
-  organizationId: string;
-  projectId: string;
+  organization_id: string;
+  project_id: string;
   status: ScanStatus;
-  scanTypes: ScanType[];
-  createdAt: string;
-  updatedAt: string;
-  completedAt?: string;
-  gitUrl?: string;
-  gitBranch?: string;
-  gitCommit?: string;
-  totalFindings: number;
-  findingsBySeverity: Record<string, number>;
-  errorMessage?: string;
+  scan_types: ScanType[];
+  created_at: string;
+  updated_at: string;
+  completed_at?: string;
+  git_url?: string;
+  git_branch?: string;
+  git_commit?: string;
+  total_findings: number;
+  findings_by_severity: Record<string, number>;
+  error_message?: string;
 }
 
 export enum ScanStatus {
@@ -35,19 +35,19 @@ export enum ScanType {
 }
 
 export interface CreateScanRequest {
-  projectId: string;
-  scanTypes: ScanType[];
-  gitUrl?: string;
-  gitBranch?: string;
-  gitCommit?: string;
-  sourceArtifactId?: string;
+  project_id: string;
+  scan_types: ScanType[];
+  git_url?: string;
+  git_branch?: string;
+  git_commit?: string;
+  source_artifact_id?: string;
 }
 
 export interface ScanProgress {
-  scanId: string;
+  scan_id: string;
   status: ScanStatus;
   progress: number; // 0-100
-  currentStep?: string;
+  current_step?: string;
   message?: string;
 }
 
@@ -55,12 +55,12 @@ export interface ScanLog {
   timestamp: string;
   level: 'info' | 'warn' | 'error' | 'debug';
   message: string;
-  scanType?: ScanType;
+  scan_type?: ScanType;
 }
 
 export interface ScanSummary {
-  totalScans: number;
-  activeScans: number;
-  completedToday: number;
-  averageDuration: number; // in seconds
+  total_scans: number;
+  active_scans: number;
+  completed_today: number;
+  average_duration: number; // in seconds
 }

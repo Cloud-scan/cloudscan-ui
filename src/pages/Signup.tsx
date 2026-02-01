@@ -69,7 +69,7 @@ export const Signup: React.FC = () => {
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-block h-12 w-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
+          <div className="inline-block h-12 w-12 bg-blue-600 rounded-lg flex items-center justify-center mb-2">
             <span className="text-white font-bold text-2xl">C</span>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">CloudScan</h1>

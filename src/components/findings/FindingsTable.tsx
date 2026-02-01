@@ -69,7 +69,7 @@ export const FindingsTable: React.FC<FindingsTableProps> = ({
                 <SeverityIcon severity={finding.severity} showLabel size="sm" />
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                <ScanTypeLabel type={finding.scanType} />
+                <ScanTypeLabel type={finding.scan_type} />
               </td>
               <td className="px-6 py-4">
                 <div className="text-sm font-medium text-gray-900 dark:text-white">
@@ -80,25 +80,25 @@ export const FindingsTable: React.FC<FindingsTableProps> = ({
                 </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                {finding.filePath && (
+                {finding.file_path && (
                   <div className="text-sm">
                     <div className="text-gray-900 dark:text-white font-mono text-xs truncate max-w-xs">
-                      {finding.filePath}
+                      {finding.file_path}
                     </div>
-                    {finding.lineNumber && (
+                    {finding.line_number && (
                       <div className="text-gray-500 dark:text-gray-400">
-                        Line {finding.lineNumber}
+                        Line {finding.line_number}
                       </div>
                     )}
                   </div>
                 )}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm">
-                {finding.cveId && (
-                  <div className="text-gray-900 dark:text-white font-mono">{finding.cveId}</div>
+                {finding.cve_id && (
+                  <div className="text-gray-900 dark:text-white font-mono">{finding.cve_id}</div>
                 )}
-                {finding.cweId && (
-                  <div className="text-gray-500 dark:text-gray-400 font-mono">{finding.cweId}</div>
+                {finding.cwe_id && (
+                  <div className="text-gray-500 dark:text-gray-400 font-mono">{finding.cwe_id}</div>
                 )}
               </td>
             </tr>
