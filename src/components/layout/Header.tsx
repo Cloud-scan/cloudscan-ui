@@ -2,7 +2,7 @@
  * Header component with navigation and user menu
  */
 
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, Transition } from '@headlessui/react';
 import {
@@ -75,7 +75,6 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
               </Menu.Button>
 
               <Transition
-                as={Fragment}
                 enter="transition ease-out duration-100"
                 enterFrom="transform opacity-0 scale-95"
                 enterTo="transform opacity-100 scale-100"

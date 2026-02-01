@@ -102,6 +102,7 @@ export const ToastContainer: React.FC = () => {
       {notifications.map((notification) => (
         <Transition
           key={notification.id}
+          as="div"
           show={true}
           enter="transition ease-out duration-200"
           enterFrom="opacity-0 translate-x-4"
