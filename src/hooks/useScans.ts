@@ -24,9 +24,9 @@ export const useScan = (id: string | undefined) => {
     queryKey: ['scans', id],
     queryFn: () => scanService.getById(id!),
     enabled: !!id,
-    refetchInterval: (data) => {
+    refetchInterval: (query) => {
       // Auto-refetch every 5 seconds if scan is running or queued
-      const status = data?.status;
+      const status = query.state.data?.status;
       return status === ScanStatus.RUNNING || status === ScanStatus.QUEUED ? 5000 : false;
     },
   });

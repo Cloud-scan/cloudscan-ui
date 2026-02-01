@@ -80,7 +80,7 @@ export const ScanDetails: React.FC = () => {
       {isActive && (
         <ProgressBar
           progress={progress}
-          variant={scan.status === ScanStatus.RUNNING ? 'default' : 'info'}
+          variant="default"
           showLabel
           label={scan.status}
           size="lg"

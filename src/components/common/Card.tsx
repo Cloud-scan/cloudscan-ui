@@ -7,7 +7,7 @@ import React from 'react';
 export interface CardProps {
   children: React.ReactNode;
   title?: string;
-  subtitle?: string;
+  subtitle?: React.ReactNode;
   actions?: React.ReactNode;
   className?: string;
   padding?: 'none' | 'sm' | 'md' | 'lg';

@@ -41,7 +41,6 @@ export const Settings: React.FC = () => {
     register: registerProfile,
     handleSubmit: handleSubmitProfile,
     formState: { errors: profileErrors },
-    reset: resetProfile,
   } = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     values: user
