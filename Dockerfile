@@ -35,7 +35,7 @@ RUN addgroup -g 1000 cloudscan && \
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy built application from builder stage
-COPY --from=builder /build/dist /usr/share/nginx/html
+COPY --from=builder /build/build /usr/share/nginx/html
 
 # Create necessary directories and set permissions
 RUN mkdir -p /var/cache/nginx /var/log/nginx /var/run /tmp/nginx && \
