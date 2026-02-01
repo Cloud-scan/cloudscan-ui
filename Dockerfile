@@ -1,4 +1,4 @@
-# Multi-stage Dockerfile for CloudScan UI (React)
+# Multi-stage Dockerfile for CloudScan UI
 # Stage 1: Build the React application
 FROM node:20-alpine AS builder
 
@@ -8,18 +8,16 @@ WORKDIR /build
 COPY package*.json ./
 
 # Install dependencies
-RUN npm config set fetch-timeout 600000 && \
-  npm config set fetch-retries 5 && \
-  npm install
+RUN npm ci
 
 # Copy source code
 COPY . .
 
-# Build the React application
-ARG REACT_APP_API_URL
-ARG REACT_APP_WS_URL
-ENV REACT_APP_API_URL=${REACT_APP_API_URL:-http://localhost:8080}
-ENV REACT_APP_WS_URL=${REACT_APP_WS_URL:-ws://localhost:9090}
+# Build the application (Vite uses VITE_* prefix for env vars)
+ARG VITE_API_URL=http://localhost:8080/api/v1
+ARG VITE_WS_URL=ws://localhost:9090
+ENV VITE_API_URL=${VITE_API_URL}
+ENV VITE_WS_URL=${VITE_WS_URL}
 
 RUN npm run build
 
@@ -29,90 +27,30 @@ FROM nginx:1.25-alpine
 # Install runtime dependencies
 RUN apk add --no-cache ca-certificates tzdata curl
 
-# Create user with UID 1000 (matching other CloudScan services)
+# Create non-root user (matching other CloudScan services)
 RUN addgroup -g 1000 cloudscan && \
     adduser -D -u 1000 -G cloudscan cloudscan
 
-# Create custom nginx.conf that doesn't require root
-RUN cat > /etc/nginx/nginx.conf <<'EOF'
-worker_processes auto;
-error_log /dev/stdout warn;
-pid /tmp/nginx.pid;
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
 
-events {
-    worker_connections 1024;
-}
+# Copy built application from builder stage
+COPY --from=builder /build/dist /usr/share/nginx/html
 
-http {
-    include /etc/nginx/mime.types;
-    default_type application/octet-stream;
+# Create necessary directories and set permissions
+RUN mkdir -p /var/cache/nginx /var/log/nginx /var/run /tmp/nginx && \
+    touch /var/run/nginx.pid && \
+    chown -R cloudscan:cloudscan /usr/share/nginx/html /var/cache/nginx /var/log/nginx /var/run /tmp/nginx
 
-    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
-                    '$status $body_bytes_sent "$http_referer" '
-                    '"$http_user_agent" "$http_x_forwarded_for"';
-
-    access_log /dev/stdout main;
-
-    sendfile on;
-    tcp_nopush on;
-    keepalive_timeout 65;
-    gzip on;
-
-    # Use /tmp for cache directories (writable by cloudscan user)
-    client_body_temp_path /tmp/client_temp;
-    proxy_temp_path /tmp/proxy_temp;
-    fastcgi_temp_path /tmp/fastcgi_temp;
-    uwsgi_temp_path /tmp/uwsgi_temp;
-    scgi_temp_path /tmp/scgi_temp;
-
-    server {
-        listen 3000;
-        server_name _;
-        root /usr/share/nginx/html;
-        index index.html;
-
-        location / {
-            try_files $uri $uri/ /index.html;
-        }
-
-        location /api {
-            proxy_pass http://cloudscan-api-gateway:8080;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "upgrade";
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-        }
-    }
-}
-EOF
-
-# Copy built application from builder
-COPY --from=builder /build/build /usr/share/nginx/html
-
-# Create custom entrypoint script
-RUN cat > /docker-entrypoint.sh <<'EOF'
-#!/bin/sh
-set -e
-mkdir -p /tmp/client_temp /tmp/proxy_temp /tmp/fastcgi_temp /tmp/uwsgi_temp /tmp/scgi_temp
-exec nginx -g "daemon off;"
-EOF
-
-# Set permissions for user 1000 (cloudscan)
-RUN chmod +x /docker-entrypoint.sh && \
-    chown -R cloudscan:cloudscan /usr/share/nginx/html
+# Switch to non-root user
+USER cloudscan
 
 # Expose HTTP port
-EXPOSE 3000
+EXPOSE 80
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD curl -f http://localhost:3000/ || exit 1
+    CMD curl -f http://localhost:80/ || exit 1
 
-# Switch to non-root user (1000)
-USER 1000
-
-# Use custom entrypoint to bypass nginx's default scripts
-ENTRYPOINT ["/docker-entrypoint.sh"]
+# Run nginx in foreground
+CMD ["nginx", "-g", "daemon off;"]

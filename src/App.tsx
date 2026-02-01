@@ -1,31 +1,96 @@
-import { useState } from 'react'
+/**
+ * Main App component with routing
+ */
+
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Layout } from './components/layout';
+import {
+  Login,
+  Signup,
+  Dashboard,
+  Projects,
+  ScanNew,
+  ScanDetails,
+  FindingsPage,
+  Settings,
+} from './pages';
+import { useAuthStore } from './stores';
+import { PageSpinner } from './components/common';
+
+// Protected Route Component
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated, isLoading } = useAuthStore();
+
+  if (isLoading) {
+    return <PageSpinner />;
+  }
+
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
+};
+
+// Public Route (redirects to dashboard if already authenticated)
+const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated } = useAuthStore();
+
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : <>{children}</>;
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { loadUser, isAuthenticated } = useAuthStore();
+
+  // Load user on app start if token exists
+  useEffect(() => {
+    if (!isAuthenticated) {
+      loadUser();
+    }
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg text-center">
-        <h1 className="text-4xl font-bold text-blue-600 mb-4">
-          CloudScan UI
-        </h1>
-        <p className="text-gray-600 mb-4">
-          Open-Source Security Scanning Platform
-        </p>
-        <div className="mb-4">
-          <button
-            onClick={() => setCount((count) => count + 1)}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
-        </div>
-        <p className="text-sm text-gray-500">
-          This is a placeholder. Full UI implementation coming soon.
-        </p>
-      </div>
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        {/* Public routes */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <PublicRoute>
+              <Signup />
+            </PublicRoute>
+          }
+        />
+
+        {/* Protected routes with layout */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/scans" element={<Dashboard />} />
+          <Route path="/scans/new" element={<ScanNew />} />
+          <Route path="/scans/:id" element={<ScanDetails />} />
+          <Route path="/scans/:scanId/findings" element={<FindingsPage />} />
+          <Route path="/findings" element={<FindingsPage />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
+
+        {/* Default redirect */}
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
