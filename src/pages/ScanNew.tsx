@@ -7,7 +7,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Card, Button, Select, Input } from '../components/common';
+import { Card, Button, Select } from '../components/common';
 import { ScanTypeSelector } from '../components/scans';
 import { useProjects, useCreateScan } from '../hooks';
 import { useUiStore } from '../stores';
@@ -16,9 +16,6 @@ import { ScanType } from '../types';
 const scanSchema = z.object({
   projectId: z.string().min(1, 'Please select a project'),
   scanTypes: z.array(z.nativeEnum(ScanType)).min(1, 'Select at least one scan type'),
-  gitUrl: z.string().url('Invalid URL').optional().or(z.literal('')),
-  gitBranch: z.string().optional(),
-  gitCommit: z.string().optional(),
 });
 
 type ScanFormData = z.infer<typeof scanSchema>;
@@ -57,13 +54,10 @@ export const ScanNew: React.FC = () => {
 
   const onSubmit = async (data: ScanFormData) => {
     try {
-      // Transform to snake_case for API
+      // Send to API - will use project's repository settings automatically
       const scanData = {
         project_id: data.projectId,
         scan_types: data.scanTypes,
-        git_url: data.gitUrl,
-        git_branch: data.gitBranch,
-        git_commit: data.gitCommit,
       };
       const scan = await createScan(scanData);
       addNotification({
@@ -109,62 +103,31 @@ export const ScanNew: React.FC = () => {
 
           {selectedProject && (
             <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                <strong>Project:</strong> {selectedProject.name}
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+                <strong>Selected Project:</strong> {selectedProject.name}
               </p>
               {selectedProject.description && (
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                   {selectedProject.description}
                 </p>
               )}
               {selectedProject.repository_url && (
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  <strong>Repository:</strong> {selectedProject.repository_url}
-                </p>
+                <div className="border-t border-blue-200 dark:border-blue-800 pt-2 mt-2">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <strong>Will scan:</strong> {selectedProject.repository_url}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <strong>Branch:</strong> {selectedProject.default_branch || 'main'}
+                  </p>
+                </div>
               )}
             </div>
           )}
         </Card>
 
-        {/* Step 2: Configure Source */}
+        {/* Step 2: Select Scan Types */}
         <Card
-          title="2. Configure Source"
-          subtitle="Optional: Override project Git settings"
-          padding="md"
-        >
-          <div className="space-y-4">
-            <Input
-              label="Git URL"
-              {...register('gitUrl')}
-              error={errors.gitUrl?.message}
-              fullWidth
-              placeholder={selectedProject?.repository_url || 'https://github.com/user/repo'}
-              helperText="Optional: Override project repository URL"
-            />
-
-            <div className="grid grid-cols-2 gap-4">
-              <Input
-                label="Branch"
-                {...register('gitBranch')}
-                error={errors.gitBranch?.message}
-                fullWidth
-                placeholder={selectedProject?.default_branch || 'main'}
-              />
-
-              <Input
-                label="Commit SHA"
-                {...register('gitCommit')}
-                error={errors.gitCommit?.message}
-                fullWidth
-                placeholder="Optional: Specific commit"
-              />
-            </div>
-          </div>
-        </Card>
-
-        {/* Step 3: Select Scan Types */}
-        <Card
-          title="3. Select Scan Types"
+          title="2. Select Scan Types"
           subtitle="Choose which security scans to run"
           padding="md"
         >
@@ -176,8 +139,8 @@ export const ScanNew: React.FC = () => {
           )}
         </Card>
 
-        {/* Step 4: Review and Launch */}
-        <Card title="4. Review and Launch" subtitle="Review your scan configuration" padding="md">
+        {/* Step 3: Review and Launch */}
+        <Card title="3. Review and Launch" subtitle="Review your scan configuration" padding="md">
           <div className="space-y-3 mb-6">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600 dark:text-gray-400">Project:</span>
@@ -185,6 +148,22 @@ export const ScanNew: React.FC = () => {
                 {selectedProject?.name || 'Not selected'}
               </span>
             </div>
+            {selectedProject?.repository_url && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600 dark:text-gray-400">Repository:</span>
+                <span className="font-medium text-gray-900 dark:text-white text-right truncate max-w-md">
+                  {selectedProject.repository_url}
+                </span>
+              </div>
+            )}
+            {selectedProject?.default_branch && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600 dark:text-gray-400">Branch:</span>
+                <span className="font-medium text-gray-900 dark:text-white">
+                  {selectedProject.default_branch}
+                </span>
+              </div>
+            )}
             <div className="flex justify-between text-sm">
               <span className="text-gray-600 dark:text-gray-400">Scan Types:</span>
               <span className="font-medium text-gray-900 dark:text-white">
